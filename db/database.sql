@@ -147,31 +147,18 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Ventas_entregadas` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Ventas_entregadas_Total_dinero_recogido1`
     FOREIGN KEY (`Total_dinero_recogido_idTotal_dinero_recogido`)
-    REFERENCES `innovastorenicdb`.`Total_dinero_recogido` (`idTotal_dinero_recogido`)
+    REFERENCES `innovastorenicapp`.`Total_dinero_recogido` (`idTotal_dinero_recogido`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Usuarios_con_sesión` (
-  `idUsuarios_con_sesión` INT NOT NULL AUTO_INCREMENT,
-  `ip_usuario` VARCHAR(100) NOT NULL,
-  `Usuarios_idUsuarios` INT NOT NULL,
-  PRIMARY KEY (`idUsuarios_con_sesión`),
-  INDEX `fk_Usuarios_con_sesión_Usuarios_idx` (`Usuarios_idUsuarios` ASC) VISIBLE,
-  CONSTRAINT `fk_Usuarios_con_sesión_Usuarios`
-    FOREIGN KEY (`Usuarios_idUsuarios`)
-    REFERENCES `innovastorenicdb`.`Usuarios` (`idUsuarios`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Historial_entregas` (
+CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`Historial_entregas` (
   `idHistorial_entregas` INT NOT NULL AUTO_INCREMENT,
   `total_entrega` INT NULL,
   PRIMARY KEY (`idHistorial_entregas`)
 ) ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
+CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada` (
   `identrega_finalizada` INT NOT NULL,
   `Entrega_idEntrega` INT NOT NULL,
   `Historial_entregas_idHistorial_entregas` INT NOT NULL,
@@ -185,7 +172,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_entrega_finalizada_Historial_entregas1`
     FOREIGN KEY (`Historial_entregas_idHistorial_entregas`)
-    REFERENCES `innovastorenicdb`.`Historial_entregas` (`idHistorial_entregas`)
+    REFERENCES `innovastorenicapp`.`Historial_entregas` (`idHistorial_entregas`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
@@ -193,4 +180,3 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-
