@@ -37,7 +37,7 @@ export const agregarUsuario = async (req, res) => {
       celular,
       nombre,
       Apellido,
-      contraseña,
+      contraseña, // Esta es la contraseña en texto plano
       domicilio,
       fecha_nacimiento,
       Roles_idRoles,
@@ -57,7 +57,7 @@ export const agregarUsuario = async (req, res) => {
       celular,
       nombre,
       Apellido,
-      hashedPassword,
+      hashedPassword, // Guardamos el hash en lugar de la contraseña en texto plano
       domicilio,
       fecha_nacimiento,
       Roles_idRoles,
@@ -80,7 +80,7 @@ export const actualizarUsuario = async (req, res) => {
       celular,
       nombre,
       Apellido,
-      contraseña,
+      contraseña, // Esta es la contraseña en texto plano
       domicilio,
       fecha_nacimiento,
       Roles_idRoles,
@@ -91,7 +91,7 @@ export const actualizarUsuario = async (req, res) => {
       return res.status(400).json({ message: "Faltan datos obligatorios" });
     }
 
-    // Encriptar la contraseña antes de almacenarla en la base de datos
+    // Encriptar la nueva contraseña antes de almacenarla en la base de datos
     const hashedPassword = await bcrypt.hash(contraseña, saltRounds);
 
     const sql =
@@ -100,7 +100,7 @@ export const actualizarUsuario = async (req, res) => {
       celular,
       nombre,
       Apellido,
-      hashedPassword,
+      hashedPassword, // Guardamos el hash en lugar de la contraseña en texto plano
       domicilio,
       fecha_nacimiento,
       Roles_idRoles,
