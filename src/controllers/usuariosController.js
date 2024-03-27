@@ -1,7 +1,7 @@
 import { pool } from "../db.js";
 import bcrypt from "bcrypt";
 
-const saltRounds = 10; // Número de rondas de sal para la encriptación de contraseñas
+const saltRounds = 10;
 
 export const obtenerUsuarios = async (req, res) => {
   try {
