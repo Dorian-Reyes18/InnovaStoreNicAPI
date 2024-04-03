@@ -9,10 +9,10 @@ import {
 
 const router = express.Router();
 
-router.get("/estadoEntrega", obtenerEstadoEntrega);
-router.get("/estadoEntrega/:id", obtenerEstadoEntregaPorId);
-router.post("/estadoEntrega", crearEstadoEntrega);
-router.put("/estadoEntrega/:id", actualizarEstadoEntrega);
-router.delete("/estadoEntrega/:id", eliminarEstadoEntrega);
+router.get("/estadoentrega", obtenerEstadoEntrega);
+router.get("/estadoentrega/:id", obtenerEstadoEntregaPorId);
+router.post("/estadoentrega", crearEstadoEntrega);
+router.put("/estadoentrega/:id", actualizarEstadoEntrega);
+router.delete("/estadoentrega/:id", eliminarEstadoEntrega);
 
 export default router;
