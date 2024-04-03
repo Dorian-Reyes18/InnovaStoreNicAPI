@@ -40,11 +40,8 @@ export const crearEstadoEntrega = async (req, res) => {
         .json({ message: "Falta el estado en la solicitud" });
     }
 
-    const fechaCambio = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-    const sql =
-      "INSERT INTO Estado_entrega (estado, fecha_cambio) VALUES (?, ?)";
-    const result = await pool.query(sql, [estado, fechaCambio]);
+    const sql = "INSERT INTO Estado_entrega (estado) VALUES (?)";
+    const result = await pool.query(sql, [estado]);
 
     res.json({
       message: "Estado de entrega creado correctamente",
@@ -67,11 +64,9 @@ export const actualizarEstadoEntrega = async (req, res) => {
         .json({ message: "Falta el estado en la solicitud" });
     }
 
-    const fechaCambio = new Date().toISOString().slice(0, 19).replace("T", " ");
-
     const sql =
-      "UPDATE Estado_entrega SET estado = ?, fecha_cambio = ? WHERE idEstado_entrega = ?";
-    await pool.query(sql, [estado, fechaCambio, id]);
+      "UPDATE Estado_entrega SET estado = ? WHERE idEstado_entrega = ?";
+    await pool.query(sql, [estado, id]);
 
     res.json({
       message: `Estado de entrega con ID ${id} actualizado correctamente`,
