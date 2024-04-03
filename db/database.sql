@@ -1,7 +1,6 @@
 DROP DATABASE IF EXISTS innovastorenicdb;
 
 CREATE SCHEMA IF NOT EXISTS `innovastorenicdb` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-
 USE `innovastorenicdb` ;
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Roles` (
@@ -9,7 +8,6 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Roles` (
   `Rol` VARCHAR(100) NOT NULL,
   PRIMARY KEY (`idRoles`))
 ENGINE = InnoDB;
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Usuarios` (
   `idUsuarios` INT NOT NULL AUTO_INCREMENT,
@@ -30,7 +28,6 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Usuarios` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Info_cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
   `Nombre completo` VARCHAR(500) NOT NULL,
@@ -41,9 +38,6 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Info_cliente` (
   UNIQUE INDEX `celular_UNIQUE` (`celular` ASC) VISIBLE)
 ENGINE = InnoDB;
 
-
-
-
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Productos` (
   `idProductos` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(200) NOT NULL,
@@ -53,52 +47,37 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Productos` (
   PRIMARY KEY (`idProductos`))
 ENGINE = InnoDB;
 
-
-
-
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_venta` (
-  `idEstado_venta` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_entrega` (
+  `idEstado_entrega` INT NOT NULL AUTO_INCREMENT,
   `estado` VARCHAR(45) NOT NULL,
-  `fecha` DATE NOT NULL,
-  PRIMARY KEY (`idEstado_venta`))
+  PRIMARY KEY (`idEstado_entrega`))
 ENGINE = InnoDB;
-
-
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Orden_venta` (
   `idVentas` INT NOT NULL AUTO_INCREMENT,
-  `pago_de_delivery` INT NOT NULL,
+  `pago_de_delivery` DECIMAL(10,2) NOT NULL,
   `fecha_de_registro` DATE NOT NULL,
   `Info_cliente_idCliente` INT NOT NULL,
-  `Estado_venta_idEstado_venta` INT NOT NULL,
   PRIMARY KEY (`idVentas`),
   INDEX `fk_Orden_venta_Info_cliente1_idx` (`Info_cliente_idCliente` ASC) VISIBLE,
-  INDEX `fk_Orden_venta_Estado_venta1_idx` (`Estado_venta_idEstado_venta` ASC) VISIBLE,
   CONSTRAINT `fk_Orden_venta_Info_cliente1`
     FOREIGN KEY (`Info_cliente_idCliente`)
     REFERENCES `innovastorenicdb`.`Info_cliente` (`idCliente`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Orden_venta_Estado_venta1`
-    FOREIGN KEY (`Estado_venta_idEstado_venta`)
-    REFERENCES `innovastorenicdb`.`Estado_venta` (`idEstado_venta`)
-    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
-
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
   `idEntrega` INT NOT NULL AUTO_INCREMENT,
   `Usuarios_idUsuarios` INT NOT NULL,
-  `fecha_entrega` DATE NULL,
-  `hora_entrega` TIME NULL,
+  `fecha_cambio_estado` DATETIME NULL,
+  `fecha_de_carga` DATE NULL,
   `Orden_venta_idVentas` INT NOT NULL,
+  `Estado_entrega_idEstado_entrega` INT NOT NULL,
   PRIMARY KEY (`idEntrega`),
   INDEX `fk_Entrega_Usuarios1_idx` (`Usuarios_idUsuarios` ASC) VISIBLE,
   INDEX `fk_Entrega_Orden_venta1_idx` (`Orden_venta_idVentas` ASC) VISIBLE,
+  INDEX `fk_Entrega_Estado_entrega1_idx` (`Estado_entrega_idEstado_entrega` ASC) VISIBLE,
   CONSTRAINT `fk_Entrega_Usuarios1`
     FOREIGN KEY (`Usuarios_idUsuarios`)
     REFERENCES `innovastorenicdb`.`Usuarios` (`idUsuarios`)
@@ -108,13 +87,18 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
     FOREIGN KEY (`Orden_venta_idVentas`)
     REFERENCES `innovastorenicdb`.`Orden_venta` (`idVentas`)
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Entrega_Estado_entrega1`
+    FOREIGN KEY (`Estado_entrega_idEstado_entrega`)
+    REFERENCES `innovastorenicdb`.`Estado_entrega` (`idEstado_entrega`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Pago_por_ventas` (
   `idPago_por_ventas` INT NOT NULL AUTO_INCREMENT,
-  `cantidad_pago` INT NULL,
+  `fecha_de_pago` DATE NULL,
+  `monto` DECIMAL(10,2) NULL,
   `Orden_venta_idVentas` INT NOT NULL,
   PRIMARY KEY (`idPago_por_ventas`),
   INDEX `fk_Pago_por_ventas_Orden_venta1_idx` (`Orden_venta_idVentas` ASC) VISIBLE,
@@ -124,7 +108,6 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Pago_por_ventas` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`productos_asociados` (
   `Productos_idProductos` INT NOT NULL,
@@ -143,14 +126,12 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`productos_asociados` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Mes_y_año` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Año` INT NULL,
   `Mes` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Total_dinero_recogido` (
   `idTotal_dinero_recogido` INT NOT NULL AUTO_INCREMENT,
@@ -164,7 +145,6 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Total_dinero_recogido` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Ventas_entregadas` (
   `idVentas_entregadas` INT NOT NULL AUTO_INCREMENT,
@@ -194,30 +174,44 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Historial_entregas` (
   PRIMARY KEY (`idHistorial_entregas`))
 ENGINE = InnoDB;
 
-
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
   `identrega_finalizada` INT NOT NULL,
-  `Entrega_idEntrega` INT NOT NULL,
   `Historial_entregas_idHistorial_entregas` INT NOT NULL,
+  `fecha_entregada` DATE NULL,
   PRIMARY KEY (`identrega_finalizada`),
-  INDEX `fk_entrega_finalizada_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
   INDEX `fk_entrega_finalizada_Historial_entregas1_idx` (`Historial_entregas_idHistorial_entregas` ASC) VISIBLE,
-  CONSTRAINT `fk_entrega_finalizada_Entrega1`
-    FOREIGN KEY (`Entrega_idEntrega`)
-    REFERENCES `innovastorenicdb`.`Entrega` (`idEntrega`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_entrega_finalizada_Historial_entregas1`
     FOREIGN KEY (`Historial_entregas_idHistorial_entregas`)
-    REFERENCES `innovastorenicapp`.`Historial_entregas` (`idHistorial_entregas`)
+    REFERENCES `innovastorenicdb`.`Historial_entregas` (`idHistorial_entregas`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-INSERT INTO Roles ( Rol ) VALUES
-('Administrador'), ('Inventarista'), ('Vendedor'), ('Delivery');
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada_has_Entrega` (
+  `entrega_finalizada_identrega_finalizada` INT NOT NULL,
+  `Entrega_idEntrega` INT NOT NULL,
+  PRIMARY KEY (`entrega_finalizada_identrega_finalizada`, `Entrega_idEntrega`),
+  INDEX `fk_entrega_finalizada_has_Entrega_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
+  INDEX `fk_entrega_finalizada_has_Entrega_entrega_finalizada1_idx` (`entrega_finalizada_identrega_finalizada` ASC) VISIBLE,
+  CONSTRAINT `fk_entrega_finalizada_has_Entrega_entrega_finalizada1`
+    FOREIGN KEY (`entrega_finalizada_identrega_finalizada`)
+    REFERENCES `innovastorenicdb`.`entrega_finalizada` (`identrega_finalizada`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_entrega_finalizada_has_Entrega_Entrega1`
+    FOREIGN KEY (`Entrega_idEntrega`)
+    REFERENCES `innovastorenicdb`.`Entrega` (`idEntrega`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+INSERT INTO Roles ( Rol ) VALUES ('Administrador'), ('Inventarista'), ('Vendedor'), ('Delivery');
 
 INSERT INTO Productos (nombre, descripcion, precio, cantidad ) VALUES ('Hidrolavadora', 'Ideal para lavar tus vehículos', 1000,5);
 
+INSERT INTO Estado_entrega ( estado ) VALUES ('Recibido'),('En proceso'), ('Entregado'), ('Rechazado por cliente'),('Información erronea');
+
+SELECT * FROM Estado_entrega;
 SELECT * FROM Roles;
 SELECT * FROM Productos;

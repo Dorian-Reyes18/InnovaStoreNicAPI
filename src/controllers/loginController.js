@@ -16,7 +16,7 @@ export const login = async (req, res) => {
     );
 
     if (!user || !user[0] || !user[0].contraseña) {
-      return res.status(401).json({ error: "Credenciales inválidas" });
+      return res.status(401).json({ error: "El usuario no existe" });
     }
 
     // Verificar la contraseña
@@ -26,12 +26,13 @@ export const login = async (req, res) => {
     );
 
     if (!contraseñaValida) {
-      return res.status(401).json({ error: "Credenciales inválidas" });
+      return res.status(401).json({ error: "Contraseña incorrecta" });
     }
 
     // Generar token JWT
     const token = jwt.sign({ id: user[0].idUsuarios }, secretKey, {
       expiresIn: "1h",
+      algorithm: "HS256", // Agregamos el algoritmo de firma
     });
 
     res.json({ token });
