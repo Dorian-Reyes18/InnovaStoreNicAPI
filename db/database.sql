@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Roles` (
   PRIMARY KEY (`idRoles`))
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Usuarios` (
   `idUsuarios` INT NOT NULL AUTO_INCREMENT,
   `celular` VARCHAR(8) NOT NULL,
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Usuarios` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Info_cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
   `Nombre completo` VARCHAR(500) NOT NULL,
@@ -38,6 +40,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Info_cliente` (
   UNIQUE INDEX `celular_UNIQUE` (`celular` ASC) VISIBLE)
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Productos` (
   `idProductos` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(200) NOT NULL,
@@ -47,6 +50,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Productos` (
   PRIMARY KEY (`idProductos`))
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_entrega` (
   `idEstado_entrega` INT NOT NULL AUTO_INCREMENT,
   `estado` VARCHAR(45) NOT NULL,
@@ -54,9 +58,10 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_entrega` (
   PRIMARY KEY (`idEstado_entrega`))
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Orden_venta` (
   `idVentas` INT NOT NULL AUTO_INCREMENT,
-  `pago_de_delivery` INT NOT NULL,
+  `pago_de_delivery` DECIMAL(10,2) NOT NULL,
   `fecha_de_registro` DATE NOT NULL,
   `Info_cliente_idCliente` INT NOT NULL,
   PRIMARY KEY (`idVentas`),
@@ -67,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Orden_venta` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
   `idEntrega` INT NOT NULL AUTO_INCREMENT,
@@ -95,9 +101,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Pago_por_ventas` (
   `idPago_por_ventas` INT NOT NULL AUTO_INCREMENT,
-  `cantidad_pago` INT NULL,
+  `fecha_de_pago` DATE NULL,
+  `monto` DECIMAL(10,2) NULL,
   `Orden_venta_idVentas` INT NOT NULL,
   PRIMARY KEY (`idPago_por_ventas`),
   INDEX `fk_Pago_por_ventas_Orden_venta1_idx` (`Orden_venta_idVentas` ASC) VISIBLE,
@@ -125,14 +133,14 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`productos_asociados` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`Mes_y_año` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Mes_y_año` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `Año` INT NULL,
   `Mes` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`Total_dinero_recogido` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Total_dinero_recogido` (
   `idTotal_dinero_recogido` INT NOT NULL AUTO_INCREMENT,
   `cantidad` INT NULL,
   `Mes_y_año_id` INT NOT NULL,
@@ -140,10 +148,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`Total_dinero_recogido` (
   INDEX `fk_Total_dinero_recogido_Mes_y_año1_idx` (`Mes_y_año_id` ASC) VISIBLE,
   CONSTRAINT `fk_Total_dinero_recogido_Mes_y_año1`
     FOREIGN KEY (`Mes_y_año_id`)
-    REFERENCES `innovastorenicapp`.`Mes_y_año` (`id`)
+    REFERENCES `innovastorenicdb`.`Mes_y_año` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Ventas_entregadas` (
   `idVentas_entregadas` INT NOT NULL AUTO_INCREMENT,
@@ -160,20 +169,20 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Ventas_entregadas` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_Ventas_entregadas_Total_dinero_recogido1`
     FOREIGN KEY (`Total_dinero_recogido_idTotal_dinero_recogido`)
-    REFERENCES `innovastorenicapp`.`Total_dinero_recogido` (`idTotal_dinero_recogido`)
+    REFERENCES `innovastorenicdb`.`Total_dinero_recogido` (`idTotal_dinero_recogido`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-USE `innovastorenicapp` ;
+USE `innovastorenicdb` ;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`Historial_entregas` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Historial_entregas` (
   `idHistorial_entregas` INT NOT NULL AUTO_INCREMENT,
   `total_entrega` INT NULL,
   PRIMARY KEY (`idHistorial_entregas`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
   `identrega_finalizada` INT NOT NULL,
   `Historial_entregas_idHistorial_entregas` INT NOT NULL,
   `fecha_entregada` DATE NULL,
@@ -181,12 +190,12 @@ CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada` (
   INDEX `fk_entrega_finalizada_Historial_entregas1_idx` (`Historial_entregas_idHistorial_entregas` ASC) VISIBLE,
   CONSTRAINT `fk_entrega_finalizada_Historial_entregas1`
     FOREIGN KEY (`Historial_entregas_idHistorial_entregas`)
-    REFERENCES `innovastorenicapp`.`Historial_entregas` (`idHistorial_entregas`)
+    REFERENCES `innovastorenicdb`.`Historial_entregas` (`idHistorial_entregas`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada_has_Entrega` (
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada_has_Entrega` (
   `entrega_finalizada_identrega_finalizada` INT NOT NULL,
   `Entrega_idEntrega` INT NOT NULL,
   PRIMARY KEY (`entrega_finalizada_identrega_finalizada`, `Entrega_idEntrega`),
@@ -194,7 +203,7 @@ CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada_has_Entrega` 
   INDEX `fk_entrega_finalizada_has_Entrega_entrega_finalizada1_idx` (`entrega_finalizada_identrega_finalizada` ASC) VISIBLE,
   CONSTRAINT `fk_entrega_finalizada_has_Entrega_entrega_finalizada1`
     FOREIGN KEY (`entrega_finalizada_identrega_finalizada`)
-    REFERENCES `innovastorenicapp`.`entrega_finalizada` (`identrega_finalizada`)
+    REFERENCES `innovastorenicdb`.`entrega_finalizada` (`identrega_finalizada`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_entrega_finalizada_has_Entrega_Entrega1`
