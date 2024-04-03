@@ -47,11 +47,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Productos` (
   PRIMARY KEY (`idProductos`))
 ENGINE = InnoDB;
 
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_venta` (
-  `idEstado_venta` INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Estado_entrega` (
+  `idEstado_entrega` INT NOT NULL AUTO_INCREMENT,
   `estado` VARCHAR(45) NOT NULL,
-  `control_de_cambios` DATE NULL,
-  PRIMARY KEY (`idEstado_venta`))
+  `fecha_cambio` DATE NULL,
+  PRIMARY KEY (`idEstado_entrega`))
 ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Orden_venta` (
@@ -59,18 +59,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Orden_venta` (
   `pago_de_delivery` INT NOT NULL,
   `fecha_de_registro` DATE NOT NULL,
   `Info_cliente_idCliente` INT NOT NULL,
-  `Estado_venta_idEstado_venta` INT NOT NULL,
   PRIMARY KEY (`idVentas`),
   INDEX `fk_Orden_venta_Info_cliente1_idx` (`Info_cliente_idCliente` ASC) VISIBLE,
-  INDEX `fk_Orden_venta_Estado_venta1_idx` (`Estado_venta_idEstado_venta` ASC) VISIBLE,
   CONSTRAINT `fk_Orden_venta_Info_cliente1`
     FOREIGN KEY (`Info_cliente_idCliente`)
     REFERENCES `innovastorenicdb`.`Info_cliente` (`idCliente`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Orden_venta_Estado_venta1`
-    FOREIGN KEY (`Estado_venta_idEstado_venta`)
-    REFERENCES `innovastorenicdb`.`Estado_venta` (`idEstado_venta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -80,9 +73,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
   `Usuarios_idUsuarios` INT NOT NULL,
   `fecha_de_carga` DATE NULL,
   `Orden_venta_idVentas` INT NOT NULL,
+  `Estado_entrega_idEstado_entrega` INT NOT NULL,
   PRIMARY KEY (`idEntrega`),
   INDEX `fk_Entrega_Usuarios1_idx` (`Usuarios_idUsuarios` ASC) VISIBLE,
   INDEX `fk_Entrega_Orden_venta1_idx` (`Orden_venta_idVentas` ASC) VISIBLE,
+  INDEX `fk_Entrega_Estado_entrega1_idx` (`Estado_entrega_idEstado_entrega` ASC) VISIBLE,
   CONSTRAINT `fk_Entrega_Usuarios1`
     FOREIGN KEY (`Usuarios_idUsuarios`)
     REFERENCES `innovastorenicdb`.`Usuarios` (`idUsuarios`)
@@ -91,6 +86,11 @@ CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
   CONSTRAINT `fk_Entrega_Orden_venta1`
     FOREIGN KEY (`Orden_venta_idVentas`)
     REFERENCES `innovastorenicdb`.`Orden_venta` (`idVentas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Entrega_Estado_entrega1`
+    FOREIGN KEY (`Estado_entrega_idEstado_entrega`)
+    REFERENCES `innovastorenicdb`.`Estado_entrega` (`idEstado_entrega`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -175,20 +175,31 @@ ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada` (
   `identrega_finalizada` INT NOT NULL,
-  `Entrega_idEntrega` INT NOT NULL,
   `Historial_entregas_idHistorial_entregas` INT NOT NULL,
   `fecha_entregada` DATE NULL,
   PRIMARY KEY (`identrega_finalizada`),
-  INDEX `fk_entrega_finalizada_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
   INDEX `fk_entrega_finalizada_Historial_entregas1_idx` (`Historial_entregas_idHistorial_entregas` ASC) VISIBLE,
-  CONSTRAINT `fk_entrega_finalizada_Entrega1`
-    FOREIGN KEY (`Entrega_idEntrega`)
-    REFERENCES `innovastorenicdb`.`Entrega` (`idEntrega`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `fk_entrega_finalizada_Historial_entregas1`
     FOREIGN KEY (`Historial_entregas_idHistorial_entregas`)
     REFERENCES `innovastorenicapp`.`Historial_entregas` (`idHistorial_entregas`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `innovastorenicapp`.`entrega_finalizada_has_Entrega` (
+  `entrega_finalizada_identrega_finalizada` INT NOT NULL,
+  `Entrega_idEntrega` INT NOT NULL,
+  PRIMARY KEY (`entrega_finalizada_identrega_finalizada`, `Entrega_idEntrega`),
+  INDEX `fk_entrega_finalizada_has_Entrega_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
+  INDEX `fk_entrega_finalizada_has_Entrega_entrega_finalizada1_idx` (`entrega_finalizada_identrega_finalizada` ASC) VISIBLE,
+  CONSTRAINT `fk_entrega_finalizada_has_Entrega_entrega_finalizada1`
+    FOREIGN KEY (`entrega_finalizada_identrega_finalizada`)
+    REFERENCES `innovastorenicapp`.`entrega_finalizada` (`identrega_finalizada`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_entrega_finalizada_has_Entrega_Entrega1`
+    FOREIGN KEY (`Entrega_idEntrega`)
+    REFERENCES `innovastorenicdb`.`Entrega` (`idEntrega`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

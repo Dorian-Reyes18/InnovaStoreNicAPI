@@ -4,7 +4,7 @@ import productosRoutes from "./routes/productosRoutes.js";
 import infoClientesRoutes from "./routes/infoClientesRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
 import login from "./routes/loginRoutes.js";
-import estadoVenta from "./routes/estadoVentaRoutes.js";
+import estadoEntrega from "./routes/estadoEntregaRoutes.js";
 
 const app = express();
 
@@ -13,8 +13,8 @@ app.use("/api", rolesRoutes);
 app.use("/api", productosRoutes);
 app.use("/api", infoClientesRoutes);
 app.use("/api", usuariosRoutes);
-app.use("/api", estadoVenta);
 app.use("/api", login);
+app.use("/api", estadoEntrega);
 
 const PORT = 3000;
 app.listen(PORT, () => {
