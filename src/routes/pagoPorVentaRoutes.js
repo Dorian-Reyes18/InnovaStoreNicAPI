@@ -1,18 +1,18 @@
-import { Router } from "express";
+import express from "express";
 import {
-  createPago,
-  getAllPagos,
-  getPagoById,
-  updatePago,
-  deletePago,
+  obtenerPagos,
+  obtenerPagoPorId,
+  crearPago,
+  actualizarPago,
+  eliminarPago,
 } from "../controllers/pagoPorVentaController.js";
 
-const router = Router();
+const router = express.Router();
 
-router.post("/pagos", createPago);
-router.get("/pagos", getAllPagos);
-router.get("/pagos/:id", getPagoById);
-router.put("/pagos/:id", updatePago);
-router.delete("/pagos/:id", deletePago);
+router.get("/pago", obtenerPagos);
+router.get("/pago/:id", obtenerPagoPorId);
+router.post("/pago", crearPago);
+router.put("/pago/:id", actualizarPago);
+router.delete("/pago/:id", eliminarPago);
 
 export default router;
