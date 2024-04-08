@@ -7,6 +7,7 @@ import login from "./routes/loginRoutes.js";
 import estadoEntrega from "./routes/estadoEntregaRoutes.js";
 import pagoPorVenta from "./routes/pagoPorVentaRoutes.js";
 import ordenesVenta from "./routes/ordenVentaRoute.js";
+import detalleOrdenVenta from './routes/detalleOrdenVentaRoutes.js';
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/api", login);
 app.use("/api", estadoEntrega);
 app.use("/api", pagoPorVenta);
 app.use("/api", ordenesVenta);
+app.use("/api", detalleOrdenVenta)
 
 const PORT = 3000;
 app.listen(PORT, () => {
