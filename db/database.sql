@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS innovastorenicdb;
---- MySQL Workbench Forward Engineering
+-- MySQL Workbench Forward Engineering
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -125,7 +125,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Entrega` (
   `idEntrega` INT NOT NULL AUTO_INCREMENT,
   `Usuarios_idUsuarios` INT NOT NULL,
-  `fecha_cambio_estado` DATETIME NULL,
+  `fecha_cambio_estado` DATE NULL,
   `fecha_de_carga` DATE NULL,
   `Orden_venta_idVentas` INT NOT NULL,
   `Estado_entrega_idEstado_entrega` INT NOT NULL,
@@ -246,47 +246,15 @@ ENGINE = InnoDB;
 USE `innovastorenicdb` ;
 
 -- -----------------------------------------------------
--- Table `innovastorenicdb`.`Historial_entregas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Historial_entregas` (
-  `idHistorial_entregas` INT NOT NULL AUTO_INCREMENT,
-  `total_entrega` INT NULL,
-  PRIMARY KEY (`idHistorial_entregas`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `innovastorenicdb`.`entrega_finalizada`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
-  `identrega_finalizada` INT NOT NULL,
-  `Historial_entregas_idHistorial_entregas` INT NOT NULL,
-  `fecha_entregada` DATE NULL,
-  PRIMARY KEY (`identrega_finalizada`),
-  INDEX `fk_entrega_finalizada_Historial_entregas1_idx` (`Historial_entregas_idHistorial_entregas` ASC) VISIBLE,
-  CONSTRAINT `fk_entrega_finalizada_Historial_entregas1`
-    FOREIGN KEY (`Historial_entregas_idHistorial_entregas`)
-    REFERENCES `innovastorenicdb`.`Historial_entregas` (`idHistorial_entregas`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `innovastorenicdb`.`entrega_finalizada_has_Entrega`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada_has_Entrega` (
-  `entrega_finalizada_identrega_finalizada` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `fecha_finalizada` DATE NULL,
   `Entrega_idEntrega` INT NOT NULL,
-  PRIMARY KEY (`entrega_finalizada_identrega_finalizada`, `Entrega_idEntrega`),
-  INDEX `fk_entrega_finalizada_has_Entrega_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
-  INDEX `fk_entrega_finalizada_has_Entrega_entrega_finalizada1_idx` (`entrega_finalizada_identrega_finalizada` ASC) VISIBLE,
-  CONSTRAINT `fk_entrega_finalizada_has_Entrega_entrega_finalizada1`
-    FOREIGN KEY (`entrega_finalizada_identrega_finalizada`)
-    REFERENCES `innovastorenicdb`.`entrega_finalizada` (`identrega_finalizada`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_entrega_finalizada_has_Entrega_Entrega1`
+  PRIMARY KEY (`id`),
+  INDEX `fk_entrega_finalizada_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
+  CONSTRAINT `fk_entrega_finalizada_Entrega1`
     FOREIGN KEY (`Entrega_idEntrega`)
     REFERENCES `innovastorenicdb`.`Entrega` (`idEntrega`)
     ON DELETE NO ACTION
