@@ -249,8 +249,8 @@ USE `innovastorenicdb` ;
 -- Table `innovastorenicdb`.`entrega_finalizada`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`entrega_finalizada` (
-  `id` INT NOT NULL,
-  `fecha finalizada` DATE NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `fecha_finalizada` DATE NULL,
   `Entrega_idEntrega` INT NOT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_entrega_finalizada_Entrega1_idx` (`Entrega_idEntrega` ASC) VISIBLE,
