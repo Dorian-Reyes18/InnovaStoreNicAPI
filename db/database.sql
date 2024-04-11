@@ -170,58 +170,6 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `innovastorenicdb`.`Mes_y_año`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Mes_y_año` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `Año` INT NULL,
-  `Mes` INT NULL,
-  PRIMARY KEY (`id`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `innovastorenicdb`.`Total_dinero_recogido`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Total_dinero_recogido` (
-  `idTotal_dinero_recogido` INT NOT NULL AUTO_INCREMENT,
-  `cantidad` INT NULL,
-  `Mes_y_año_id` INT NOT NULL,
-  PRIMARY KEY (`idTotal_dinero_recogido`),
-  INDEX `fk_Total_dinero_recogido_Mes_y_año1_idx` (`Mes_y_año_id` ASC) VISIBLE,
-  CONSTRAINT `fk_Total_dinero_recogido_Mes_y_año1`
-    FOREIGN KEY (`Mes_y_año_id`)
-    REFERENCES `innovastorenicdb`.`Mes_y_año` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `innovastorenicdb`.`Ventas_entregadas`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Ventas_entregadas` (
-  `idVentas_entregadas` INT NOT NULL AUTO_INCREMENT,
-  `fecha_de_entrega` DATE NULL,
-  `Orden_venta_idVentas` INT NOT NULL,
-  `Total_dinero_recogido_idTotal_dinero_recogido` INT NOT NULL,
-  PRIMARY KEY (`idVentas_entregadas`),
-  INDEX `fk_Ventas_entregadas_Orden_venta1_idx` (`Orden_venta_idVentas` ASC) VISIBLE,
-  INDEX `fk_Ventas_entregadas_Total_dinero_recogido1_idx` (`Total_dinero_recogido_idTotal_dinero_recogido` ASC) VISIBLE,
-  CONSTRAINT `fk_Ventas_entregadas_Orden_venta1`
-    FOREIGN KEY (`Orden_venta_idVentas`)
-    REFERENCES `innovastorenicdb`.`Orden_venta` (`idVentas`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Ventas_entregadas_Total_dinero_recogido1`
-    FOREIGN KEY (`Total_dinero_recogido_idTotal_dinero_recogido`)
-    REFERENCES `innovastorenicdb`.`Total_dinero_recogido` (`idTotal_dinero_recogido`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `innovastorenicdb`.`Detalle-orden-venta`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `innovastorenicdb`.`Detalle-orden-venta` (
@@ -265,6 +213,7 @@ ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
 
 USE `innovastorenicdb` ;
 
