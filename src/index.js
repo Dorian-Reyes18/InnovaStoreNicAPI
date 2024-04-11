@@ -25,7 +25,11 @@ app.use("/api", ordenesVenta);
 app.use("/api", detalleOrdenVenta)
 app.use("/api", entrega)
 app.use("/api", entregaFinalizada)
-
+app.use((req, res, next) => {
+  res.status(404).json({
+    message: "enpoint Not found"
+  })
+})
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);
