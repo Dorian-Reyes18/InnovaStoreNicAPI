@@ -14,10 +14,20 @@ import entregaFinalizada from "./routes/entregaFinalizadaRoutes.js";
 
 const app = express();
 
-// Configurar CORS para permitir solicitudes desde http://localhost:5173
+// Permitir solicitudes desde orígenes específicos
+const allowedOrigins = ["http://localhost:5173", "http://192.168.1.44"];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // Permitir solicitudes sin origen (por ejemplo, mobile apps)
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = "El origen no está permitido por CORS";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
   })
 );
 
