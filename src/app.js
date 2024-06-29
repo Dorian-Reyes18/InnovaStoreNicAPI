@@ -14,22 +14,7 @@ import entregaFinalizada from "./routes/entregaFinalizadaRoutes.js";
 
 const app = express();
 
-// Permitir solicitudes desde orígenes específicos
-const allowedOrigins = ["http://localhost:5173", "http://192.168.1.44"];
-
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // Permitir solicitudes sin origen (por ejemplo, mobile apps)
-      if (!origin) return callback(null, true);
-      if (allowedOrigins.indexOf(origin) === -1) {
-        const msg = "El origen no está permitido por CORS";
-        return callback(new Error(msg), false);
-      }
-      return callback(null, true);
-    },
-  })
-);
+app.use(cors()); // Permite CORS desde cualquier origen
 
 app.use(express.json());
 
@@ -47,7 +32,7 @@ app.use("/api", entregaFinalizada);
 
 app.use((req, res, next) => {
   res.status(404).json({
-    message: "endpoint Not found",
+    message: "Endpoint no encontrado",
   });
 });
 
