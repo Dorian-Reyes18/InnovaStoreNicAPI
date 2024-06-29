@@ -11,12 +11,15 @@ import ordenesVenta from "./routes/ordenVentaRoute.js";
 import detalleOrdenVenta from "./routes/detalleOrdenVentaRoutes.js";
 import entrega from "./routes/entregaRoutes.js";
 import entregaFinalizada from "./routes/entregaFinalizadaRoutes.js";
+import { requestLogger } from "./requestLogger.js";
 
 const app = express();
 
 app.use(cors()); // Permite CORS desde cualquier origen
 
 app.use(express.json());
+
+app.use(requestLogger);
 
 app.use("/api", rolesRoutes);
 app.use("/api", productosRoutes);
